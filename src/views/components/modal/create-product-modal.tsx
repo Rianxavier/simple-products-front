@@ -74,6 +74,7 @@ export const CreateProductModal = forwardRef<CreateProductModalRef>(
               : response.data.message;
 
           toast.error(message);
+          navigate("/");
         } else {
           toast.error("Erro ao cadastrar produto. Tente novamente.");
         }
