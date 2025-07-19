@@ -1,70 +1,26 @@
-# React + TypeScript + Vite
+# 💼 Desafio Front-End - Lista de Produtos
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 📋 Enunciado do desafio
 
-Currently, two official plugins are available:
+Para front-end: Crie uma aplicação front-end com:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+* Um formulário de criação de produto com os campos: **nome**, **preço**, **sku**
+* Ao enviar, o produto é adicionado à lista visível na tela, **vinda de um endpoint** (mockado ou real)
+* A lista deve ser **ordenada por nome**
+* Deve ser possível **remover um item da lista**
+* Na listagem de produtos, mostrar para cada item:
 
-## Expanding the ESLint configuration
+  > **A primeira letra do alfabeto ausente no nome do produto**, considerando apenas letras de a-z (ou '\_' se todas se repetirem)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Requisitos:
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+* Pode usar **React**, ou outro framework da vaga
+* Os dados podem ser **armazenados em memória** ou **consumidos de uma API mockada** (pode ser criada com `json-server` ou outra lib de mock HTTP)
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## ⚠️ Observação
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-# simple-products-front
+> Embora o enunciado permita o uso de dados em memória ou mockados, **optei por consumir a API real que desenvolvi no desafio do back-end**.
+> Essa escolha foi feita para simular um fluxo mais realista de comunicação entre front-end e back-end.
+> Caso necessário, o projeto pode ser facilmente adaptado para utilizar uma API mockada com `json-server`, `msw` ou similar.
