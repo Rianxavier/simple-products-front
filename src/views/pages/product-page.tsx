@@ -8,6 +8,10 @@ import {
   type CreateProductModalRef,
 } from "../components/modal/create-product-modal";
 import {
+  DeleteProductModal,
+  type DeleteProductModalRef,
+} from "../components/modal/delete-product-modal";
+import {
   UpdateProductModal,
   type UpdateProductModalRef,
 } from "../components/modal/update-product-modal";
@@ -23,6 +27,7 @@ export const ProductPage = () => {
 
   const modalRef = useRef<CreateProductModalRef>(null);
   const updateModalRef = useRef<UpdateProductModalRef>(null);
+  const deleteModalRef = useRef<DeleteProductModalRef>(null);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -50,6 +55,9 @@ export const ProductPage = () => {
     }
     if (location.pathname === `/product/edit/${id}`) {
       updateModalRef.current?.open(id!);
+    }
+    if (location.pathname === `/product/delete/${id}`) {
+      deleteModalRef.current?.open(id!);
     }
   }, [id, location.pathname]);
 
@@ -85,6 +93,7 @@ export const ProductPage = () => {
 
       <CreateProductModal ref={modalRef} />
       <UpdateProductModal ref={updateModalRef} />
+      <DeleteProductModal ref={deleteModalRef} />
     </div>
   );
 };

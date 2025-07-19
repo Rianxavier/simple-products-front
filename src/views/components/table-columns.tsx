@@ -57,7 +57,7 @@ export const tableColumns: ColumnDef<ProductModel>[] = [
               <Pencil className="w-4 h-4" />
             </Button>
           </Link>
-          <Link to={`/product/${product.id}/delete`}>
+          <Link to={`/product/delete/${product.id}`}>
             <Button variant="ghost" size="icon">
               <Trash className="w-4 h-4 text-destructive" />
             </Button>
