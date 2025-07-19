@@ -6,6 +6,8 @@ export const AppRouter = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<ProductPage />} />
+        <Route path="/product/create" element={<ProductPage />} />
+        <Route path="/product/edit/:id" element={<ProductPage />} />
       </Routes>
     </BrowserRouter>
   );

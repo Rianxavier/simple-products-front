@@ -52,7 +52,7 @@ export const tableColumns: ColumnDef<ProductModel>[] = [
       const product = row.original;
       return (
         <div className="flex gap-2">
-          <Link to={`/product/${product.id}`}>
+          <Link to={`/product/edit/${product.id}`}>
             <Button variant="ghost" size="icon">
               <Pencil className="w-4 h-4" />
             </Button>

@@ -1,9 +1,8 @@
-import { NumericFormat } from "react-number-format";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { forwardRef, useImperativeHandle, useRef } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { NumericFormat } from "react-number-format";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -21,29 +20,24 @@ import {
 } from "@/schemas/product-schema";
 import { DefaultModal, type DefaultModalRef } from "./default-modal";
 
-import { HttpClient } from "@/extensions/http-client/http-client"; // seu http client
+import { HttpClient } from "@/extensions/http-client/http-client";
 import { isApiError } from "@/model/ApiError";
 import { parsePriceFunction } from "@/utils/parsePrice";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export interface CreateProductModalRef {
-  open: () => void;
+export interface UpdateProductModalRef {
+  open: (id: string) => void;
   close: () => void;
 }
 
 const api = HttpClient("http://localhost:3000");
 
-export const CreateProductModal = forwardRef<CreateProductModalRef>(
+export const UpdateProductModal = forwardRef<UpdateProductModalRef>(
   (_, ref) => {
     const modalRef = useRef<DefaultModalRef>(null);
     const navigate = useNavigate();
-
-    useImperativeHandle(ref, () => ({
-      open: () => modalRef.current?.open(),
-      close: () => {
-        modalRef.current?.close();
-      },
-    }));
+    const [productId, setProductId] = useState<string | null>(null);
 
     const form = useForm<ProductFormValues>({
       resolver: zodResolver(productSchema),
@@ -54,19 +48,52 @@ export const CreateProductModal = forwardRef<CreateProductModalRef>(
       },
     });
 
+    useImperativeHandle(ref, () => ({
+      open: async (id: string) => {
+        setProductId(id);
+        try {
+          const response = await api.get<ProductFormValues>(`products/${id}`);
+          if (response.status >= 200 && response.status < 300) {
+            const { name, price, sku } = response.data;
+
+            form.reset({
+              name,
+              sku,
+              price:
+                typeof price === "number"
+                  ? Number(price).toFixed(2).replace(".", ",")
+                  : price,
+            });
+
+            modalRef.current?.open();
+          } else {
+            toast.error("Erro ao buscar produto");
+          }
+        } catch {
+          toast.error("Erro inesperado ao buscar o produto.");
+        }
+      },
+      close: () => {
+        modalRef.current?.close();
+      },
+    }));
+
     const onSubmit = async (data: ProductFormValues) => {
+      if (!productId) return;
+
       try {
         const payload = {
           ...data,
           price: parsePriceFunction(data.price),
         };
 
-        const response = await api.post("products", payload);
+        const response = await api.put(`products/${productId}`, payload);
 
         if (response.status >= 200 && response.status < 300) {
-          toast.success("Produto cadastrado com sucesso!");
+          toast.success("Produto atualizado com sucesso!");
           modalRef.current?.close();
           form.reset();
+          navigate("/");
         } else if (isApiError(response.data)) {
           const message =
             response.data.message === "SKU already exists"
@@ -75,7 +102,7 @@ export const CreateProductModal = forwardRef<CreateProductModalRef>(
 
           toast.error(message);
         } else {
-          toast.error("Erro ao cadastrar produto. Tente novamente.");
+          toast.error("Erro ao atualizar produto. Tente novamente.");
         }
       } catch (error) {
         toast.error("Erro inesperado. Tente novamente mais tarde." + error);
@@ -86,7 +113,7 @@ export const CreateProductModal = forwardRef<CreateProductModalRef>(
       <DefaultModal ref={modalRef} blur>
         <div className="rounded-xl w-full max-w-md bg-white p-6 text-black">
           <h2 className="text-lg font-semibold mb-4 text-black">
-            Cadastrar Produto
+            Atualizar Produto
           </h2>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -153,7 +180,7 @@ export const CreateProductModal = forwardRef<CreateProductModalRef>(
                 >
                   Cancelar
                 </Button>
-                <Button type="submit">Cadastrar</Button>
+                <Button type="submit">Atualizar</Button>
               </div>
             </form>
           </Form>
