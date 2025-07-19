@@ -1,7 +1,11 @@
 import { DataTable } from "@/components/ui/date-table";
 import { HttpClient } from "@/extensions/http-client/http-client";
 import { ProductModel } from "@/model/product-model";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import {
+  CreateProductModal,
+  type CreateProductModalRef,
+} from "../components/modal/create-product-modal";
 import { tableColumns } from "../components/table-columns";
 
 const api = HttpClient("http://localhost:3000");
@@ -10,6 +14,8 @@ export const ProductPage = () => {
   const [products, setProducts] = useState<ProductModel[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const modalRef = useRef<CreateProductModalRef>(null);
 
   useEffect(() => {
     setLoading(true);
@@ -37,7 +43,10 @@ export const ProductPage = () => {
         </div>
 
         {/* Botão adicionar produto */}
-        <button className="bg-[#339CFF] hover:bg-[#2687DD] text-white px-4 py-2 rounded">
+        <button
+          className="bg-[#339CFF] hover:bg-[#2687DD] text-white px-4 py-2 rounded"
+          onClick={() => modalRef.current?.open()}
+        >
           Adicionar Produto
         </button>
       </header>
@@ -57,6 +66,8 @@ export const ProductPage = () => {
           )}
         </div>
       </main>
+
+      <CreateProductModal ref={modalRef} />
     </div>
   );
 };
